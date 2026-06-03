@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="h3 mb-1">Movimentações de estoque</h1>
+        <p class="text-muted mb-0">Histórico auditável com filtros por período, produto e categoria.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('main.movements_new') }}">Registrar movimentação</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label">Data inicial</label>
+                <input type="date" class="form-control" name="start_date" value="{{ start_date }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Data final</label>
+                <input type="date" class="form-control" name="end_date" value="{{ end_date }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Produto</label>
+                <select class="form-select" name="product_id">
+                    <option value="">Todos</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}" {% if selected_product_id|int == product.id %}selected{% endif %}>{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Categoria</label>
+                <select class="form-select" name="category">
+                    <option value="">Todas</option>
+                    {% for item in categories %}
+                    <option value="{{ item }}" {% if selected_category == item %}selected{% endif %}>{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">Direção</label>
+                <select class="form-select" name="direction">
+                    <option value="">Todas</option>
+                    <option value="IN" {% if selected_direction == 'IN' %}selected{% endif %}>Entrada</option>
+                    <option value="OUT" {% if selected_direction == 'OUT' %}selected{% endif %}>Saída</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button class="btn btn-primary flex-grow-1">Filtrar</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('main.movements_list') }}">Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Direção</th>
+                    <th>Tipo</th>
+                    <th>Qtd.</th>
+                    <th>Saldo</th>
+                    <th>Responsável</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movement in movements %}
+                <tr>
+                    <td>{{ movement.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ movement.product.name }}</td>
+                    <td>{{ movement.product.category }}</td>
+                    <td><span class="badge text-bg-{{ 'success' if movement.direction == 'IN' else 'danger' }}">{{ 'Entrada' if movement.direction == 'IN' else 'Saída' }}</span></td>
+                    <td>{{ movement.reason }}</td>
+                    <td>{{ '%.2f'|format(movement.quantity) }}</td>
+                    <td>{{ '%.2f'|format(movement.previous_quantity) }} → {{ '%.2f'|format(movement.new_quantity) }}</td>
+                    <td>{{ movement.user.full_name }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center text-muted py-4">Nenhuma movimentação encontrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if pagination.pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination">
+        {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+            {% if p %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('main.movements_list', page=p, start_date=start_date, end_date=end_date, product_id=selected_product_id, category=selected_category, direction=selected_direction) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

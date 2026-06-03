@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="h3 mb-1">Logs de auditoria</h1>
+        <p class="text-muted mb-0">Rastreamento completo das ações realizadas pelos usuários.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Usuário</label>
+                <select class="form-select" name="user_id">
+                    <option value="">Todos</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if selected_user_id|int == user.id %}selected{% endif %}>{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ação</label>
+                <input class="form-control" name="action" value="{{ action }}" placeholder="login, produto_criado, exportacao_excel...">
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button class="btn btn-primary flex-grow-1">Filtrar</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('main.logs_list') }}">Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Usuário</th>
+                    <th>Ação</th>
+                    <th>Descrição</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                    <td>{{ log.user.username if log.user else 'Sistema' }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.description }}</td>
+                    <td>{{ log.ip_address or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted py-4">Nenhum log encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if pagination.pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination">
+        {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+            {% if p %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('main.logs_list', page=p, user_id=selected_user_id, action=action) }}">{{ p }}</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

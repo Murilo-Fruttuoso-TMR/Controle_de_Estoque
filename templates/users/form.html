@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-7">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">{{ 'Editar usuário' if user_obj else 'Novo usuário' }}</h1>
+                <p class="text-muted mb-0">Controle de acesso por perfil e status.</p>
+            </div>
+            <a class="btn btn-outline-secondary" href="{{ url_for('main.users_list') }}">Voltar</a>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Usuário</label>
+                        <input class="form-control" name="username" required value="{{ user_obj.username if user_obj else '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nome completo</label>
+                        <input class="form-control" name="full_name" required value="{{ user_obj.full_name if user_obj else '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Senha {% if user_obj %}<span class="text-muted">(opcional)</span>{% endif %}</label>
+                        <input class="form-control" name="password" type="password" {% if not user_obj %}required{% endif %}>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Perfil</label>
+                        <select class="form-select" name="role">
+                            <option value="user" {% if user_obj and user_obj.role == 'user' %}selected{% endif %}>Usuário comum</option>
+                            <option value="admin" {% if user_obj and user_obj.role == 'admin' %}selected{% endif %}>Administrador</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="form-check form-switch pb-2">
+                            <input class="form-check-input" type="checkbox" name="is_active_user" {% if not user_obj or user_obj.is_active_user %}checked{% endif %}>
+                            <label class="form-check-label">Usuário ativo</label>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                        <a class="btn btn-outline-secondary" href="{{ url_for('main.users_list') }}">Cancelar</a>
+                        <button class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

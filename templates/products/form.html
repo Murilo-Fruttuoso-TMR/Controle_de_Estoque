@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">{{ 'Editar produto' if product else 'Novo produto' }}</h1>
+                <p class="text-muted mb-0">Cadastro estruturado para controle e futura expansão.</p>
+            </div>
+            <a class="btn btn-outline-secondary" href="{{ url_for('main.products_list') }}">Voltar</a>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nome</label>
+                        <input class="form-control" name="name" required value="{{ product.name if product else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Categoria</label>
+                        <input class="form-control" name="category" required value="{{ product.category if product else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Unidade</label>
+                        <input class="form-control" name="unit" required placeholder="un, kg, litro..." value="{{ product.unit if product else '' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-control" name="description" rows="3">{{ product.description if product else '' }}</textarea>
+                    </div>
+                    {% if not product %}
+                    <div class="col-md-3">
+                        <label class="form-label">Saldo inicial</label>
+                        <input class="form-control" name="quantity" type="number" step="any" min="0" value="0">
+                    </div>
+                    {% endif %}
+                    <div class="col-md-3">
+                        <label class="form-label">Quantidade mínima</label>
+                        <input class="form-control" name="quantity_min" type="number" step="any" min="0" value="{{ product.quantity_min if product else 0 }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Localização</label>
+                        <input class="form-control" name="location" value="{{ product.location if product else '' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Observações</label>
+                        <textarea class="form-control" name="notes" rows="3">{{ product.notes if product else '' }}</textarea>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                        <a class="btn btn-outline-secondary" href="{{ url_for('main.products_list') }}">Cancelar</a>
+                        <button class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

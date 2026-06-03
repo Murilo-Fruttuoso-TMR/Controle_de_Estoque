@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">Importação inicial via Excel</h1>
+                <p class="text-muted mb-0">O Excel é usado apenas para entrada inicial e relatórios, nunca como base principal.</p>
+            </div>
+            <a class="btn btn-outline-secondary" href="{{ url_for('main.products_list') }}">Voltar</a>
+        </div>
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data" class="vstack gap-3">
+                    <div>
+                        <label class="form-label">Arquivo Excel</label>
+                        <input class="form-control" type="file" name="file" accept=".xlsx,.xls" required>
+                    </div>
+                    <button class="btn btn-primary align-self-end">Importar</button>
+                </form>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h5">Colunas aceitas</h2>
+                <p class="text-muted">Obrigatórias: <strong>nome</strong>, <strong>categoria</strong>, <strong>unidade</strong>.</p>
+                <p class="text-muted mb-2">Opcionais: id, descricao, quantidade, quantidade_minima, localizacao, observacoes.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead><tr><th>nome</th><th>categoria</th><th>unidade</th><th>quantidade</th><th>quantidade_minima</th></tr></thead>
+                        <tbody>
+                            <tr><td>Parafuso 10mm</td><td>Ferragens</td><td>un</td><td>150</td><td>20</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

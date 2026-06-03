@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h1 class="h3 mb-1">{{ product.name }}</h1>
+        <p class="text-muted mb-0">Categoria {{ product.category }} · cadastrado em {{ product.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="{{ url_for('main.movements_new', product_id=product.id) }}">Nova movimentação</a>
+        {% if current_user.role == 'admin' %}
+        <a class="btn btn-outline-primary" href="{{ url_for('main.products_edit', product_id=product.id) }}">Editar</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5">Resumo</h2>
+                <ul class="list-unstyled mb-0 vstack gap-2 small">
+                    <li><strong>ID:</strong> {{ product.id }}</li>
+                    <li><strong>Unidade:</strong> {{ product.unit }}</li>
+                    <li><strong>Estoque atual:</strong> <span class="badge text-bg-{{ 'danger' if product.low_stock else 'success' }}">{{ '%.2f'|format(product.quantity) }}</span></li>
+                    <li><strong>Estoque mínimo:</strong> {{ '%.2f'|format(product.quantity_min) }}</li>
+                    <li><strong>Localização:</strong> {{ product.location or '-' }}</li>
+                    <li><strong>Descrição:</strong> {{ product.description or 'Sem descrição' }}</li>
+                    <li><strong>Observações:</strong> {{ product.notes or 'Sem observações' }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
+                <h2 class="h5 mb-0">Últimas movimentações</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Direção</th>
+                                <th>Tipo</th>
+                                <th>Quantidade</th>
+                                <th>Saldo</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for movement in recent_movements %}
+                            <tr>
+                                <td>{{ movement.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td><span class="badge text-bg-{{ 'success' if movement.direction == 'IN' else 'danger' }}">{{ 'Entrada' if movement.direction == 'IN' else 'Saída' }}</span></td>
+                                <td>{{ movement.reason }}</td>
+                                <td>{{ '%.2f'|format(movement.quantity) }}</td>
+                                <td>{{ '%.2f'|format(movement.previous_quantity) }} → {{ '%.2f'|format(movement.new_quantity) }}</td>
+                                <td>{{ movement.user.full_name }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6" class="text-center text-muted py-4">Nenhuma movimentação registrada.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
