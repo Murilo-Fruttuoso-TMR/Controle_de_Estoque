@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
 
     movements = db.relationship("StockMovement", back_populates="user", lazy=True)
     logs = db.relationship("ActionLog", back_populates="user", lazy=True)
+    purchases = db.relationship("Purchase", back_populates="user", lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -45,6 +46,7 @@ class Product(db.Model):
     description = db.Column(db.Text)
     category = db.Column(db.String(100), nullable=False, index=True)
     unit = db.Column(db.String(30), nullable=False)
+    brand = db.Column(db.String(100))
     quantity = db.Column(db.Float, nullable=False, default=0)
     quantity_min = db.Column(db.Float, nullable=False, default=0)
     location = db.Column(db.String(100))
@@ -54,6 +56,12 @@ class Product(db.Model):
 
     movements = db.relationship(
         "StockMovement",
+        back_populates="product",
+        cascade="all, delete-orphan",
+        lazy=True,
+    )
+    purchases = db.relationship(
+        "Purchase",
         back_populates="product",
         cascade="all, delete-orphan",
         lazy=True,
@@ -96,6 +104,30 @@ class StockMovement(db.Model):
         db.CheckConstraint(
             "direction IN ('IN', 'OUT')", name="ck_movements_direction_valid"
         ),
+    )
+
+
+class Purchase(db.Model):
+    __tablename__ = "purchases"
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    quantity = db.Column(db.Float, nullable=False)
+    unit_price = db.Column(db.Float, nullable=False)
+    total_value = db.Column(db.Float, nullable=False)
+    supplier = db.Column(db.String(150))
+    purchase_date = db.Column(db.DateTime, nullable=False)
+    note = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+
+    product = db.relationship("Product", back_populates="purchases")
+    user = db.relationship("User", back_populates="purchases")
+
+    __table_args__ = (
+        db.CheckConstraint("quantity > 0", name="ck_purchases_quantity_positive"),
+        db.CheckConstraint("unit_price >= 0", name="ck_purchases_unit_price_non_negative"),
+        db.CheckConstraint("total_value >= 0", name="ck_purchases_total_value_non_negative"),
     )
 
 
