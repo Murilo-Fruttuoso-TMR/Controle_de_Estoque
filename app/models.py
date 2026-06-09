@@ -46,7 +46,6 @@ class Product(db.Model):
     description = db.Column(db.Text)
     category = db.Column(db.String(100), nullable=False, index=True)
     unit = db.Column(db.String(30), nullable=False)
-    brand = db.Column(db.String(100))
     quantity = db.Column(db.Float, nullable=False, default=0)
     quantity_min = db.Column(db.Float, nullable=False, default=0)
     location = db.Column(db.String(100))
