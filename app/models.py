@@ -117,7 +117,7 @@ class Purchase(db.Model):
     unit_price = db.Column(db.Float, nullable=False)
     total_value = db.Column(db.Float, nullable=False)
     supplier = db.Column(db.String(150))
-    purchase_date = db.Column(db.DateTime, nullable=False)
+    purchase_date = db.Column(db.DateTime, default=datetime.utcnow)
     note = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
 
