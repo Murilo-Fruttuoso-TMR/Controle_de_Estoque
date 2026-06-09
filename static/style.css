@@ -1,3 +1,7 @@
+:root {
+    --primary-color: #174357;
+}
+
 body {
     background: #f4f7fb;
 }
@@ -23,7 +27,7 @@ body {
 .metric-value {
     font-size: 2rem;
     font-weight: 700;
-    color: #0d3b66;
+    color: var(--primary-color);
 }
 
 .card {
@@ -40,4 +44,89 @@ body {
 
 .preview-table {
     max-height: 300px;
+}
+
+/* Navbar Styling */
+.navbar-custom {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1f5a6a 100%) !important;
+    box-shadow: 0 4px 12px rgba(23, 67, 87, 0.15);
+}
+
+.navbar-brand-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand-container:hover {
+    transform: translateY(-2px);
+}
+
+.navbar-logo {
+    font-size: 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand-container:hover .navbar-logo {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-brand-main {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+.navbar-brand-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Bootstrap override */
+.btn-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background: #1f5a6a;
+    border-color: #1f5a6a;
+}
+
+.btn-primary:active,
+.btn-primary:focus {
+    background: #123240;
+    border-color: #123240;
+}
+
+a {
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: #1f5a6a;
+}
+
+.badge.bg-primary {
+    background: var(--primary-color) !important;
 }
