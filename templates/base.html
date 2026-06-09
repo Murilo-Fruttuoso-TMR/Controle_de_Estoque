@@ -9,23 +9,41 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand fw-semibold" href="{{ url_for('main.dashboard') }}">{{ app_name }}</a>
+        <a class="navbar-brand-container" href="{{ url_for('main.dashboard') }}">
+            <svg class="navbar-logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- Logo background circle -->
+                <circle cx="40" cy="40" r="38" fill="rgba(255,255,255,0.1)"/>
+                
+                <!-- Ampersand symbol -->
+                <text x="40" y="52" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Georgia, serif">&</text>
+                
+                <!-- Accent line -->
+                <line x1="75" y1="15" x2="75" y2="65" stroke="white" stroke-width="2"/>
+                
+                <!-- Company name text would go here if needed -->
+                <text x="100" y="42" font-size="14" font-weight="700" fill="white" font-family="Arial, sans-serif">SISTEMA</text>
+            </svg>
+            <div class="navbar-brand-text">
+                <span class="navbar-brand-main">{{ app_name }}</span>
+                <span class="navbar-brand-sub">Controle de Estoque</span>
+            </div>
+        </a>
         {% if current_user.is_authenticated %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.products_list') }}">Produtos</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.movements_list') }}">Movimentações</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.reports') }}">Relatórios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.products_list') }}"><i class="bi bi-box-seam me-2"></i>Produtos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.movements_list') }}"><i class="bi bi-arrow-left-right me-2"></i>Movimentações</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.reports') }}"><i class="bi bi-file-earmark-chart me-2"></i>Relatórios</a></li>
                 {% if current_user.role == 'admin' %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.users_list') }}">Usuários</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logs_list') }}">Logs</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.import_products') }}">Importar</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.users_list') }}"><i class="bi bi-people me-2"></i>Usuários</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.logs_list') }}"><i class="bi bi-file-text me-2"></i>Logs</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.import_products') }}"><i class="bi bi-upload me-2"></i>Importar</a></li>
                 {% endif %}
             </ul>
             <div class="d-flex align-items-center gap-3 text-white small">
