@@ -12,19 +12,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
     <div class="container-fluid px-4">
         <a class="navbar-brand-container" href="{{ url_for('main.dashboard') }}">
-            <svg class="navbar-logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-                <!-- Logo background circle -->
-                <circle cx="40" cy="40" r="38" fill="rgba(255,255,255,0.1)"/>
-                
-                <!-- Ampersand symbol -->
-                <text x="40" y="52" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Georgia, serif">&</text>
-                
-                <!-- Accent line -->
-                <line x1="75" y1="15" x2="75" y2="65" stroke="white" stroke-width="2"/>
-                
-                <!-- Company name text would go here if needed -->
-                <text x="100" y="42" font-size="14" font-weight="700" fill="white" font-family="Arial, sans-serif">SISTEMA</text>
-            </svg>
+            <div class="navbar-logo">
+                <i class="bi bi-shield-check"></i>
+            </div>
             <div class="navbar-brand-text">
                 <span class="navbar-brand-main">{{ app_name }}</span>
                 <span class="navbar-brand-sub">Controle de Estoque</span>
