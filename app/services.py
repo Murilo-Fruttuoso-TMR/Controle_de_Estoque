@@ -59,6 +59,7 @@ def product_query_with_filters(search_term="", category="", low_only=False):
                 Product.name.ilike(like),
                 Product.description.ilike(like),
                 Product.category.ilike(like),
+                Product.marca.ilike(like),
                 Product.location.ilike(like),
             )
         )
@@ -91,9 +92,11 @@ def products_to_dataframe(products):
             {
                 "ID": product.id,
                 "Nome": product.name,
+                "Marca": product.marca or "",
                 "Descrição": product.description or "",
                 "Categoria": product.category,
                 "Unidade": product.unit,
+                "Valor (R$)": f"{product.valor:.2f}",
                 "Quantidade": product.quantity,
                 "Quantidade mínima": product.quantity_min,
                 "Estoque baixo": "Sim" if product.low_stock else "Não",
@@ -113,7 +116,9 @@ def movements_to_dataframe(movements):
                 "ID": movement.id,
                 "Data": movement.created_at.strftime("%d/%m/%Y %H:%M"),
                 "Produto": movement.product.name,
+                "Marca": movement.product.marca or "",
                 "Categoria": movement.product.category,
+                "Valor (R$)": f"{movement.product.valor:.2f}",
                 "Direção": "Entrada" if movement.direction == "IN" else "Saída",
                 "Tipo": movement.reason,
                 "Quantidade": movement.quantity,
@@ -174,6 +179,8 @@ def import_products_from_excel(file_storage, current_user, ip_address=None):
         quantity = max(parse_number(row.get("quantidade", 0)), 0)
         quantity_min = max(parse_number(row.get("quantidade_minima", 0)), 0)
         description = str(row.get("descricao", "")).strip()
+        marca = str(row.get("marca", "")).strip()
+        valor = max(parse_number(row.get("valor", 0)), 0)
         location = str(row.get("localizacao", "")).strip()
         notes = str(row.get("observacoes", "")).strip()
 
@@ -191,6 +198,8 @@ def import_products_from_excel(file_storage, current_user, ip_address=None):
                 unit=unit,
                 quantity=0,
                 quantity_min=quantity_min,
+                marca=marca,
+                valor=valor,
                 description=description,
                 location=location,
                 notes=notes,
@@ -203,6 +212,8 @@ def import_products_from_excel(file_storage, current_user, ip_address=None):
             product.category = category
             product.unit = unit
             product.quantity_min = quantity_min
+            product.marca = marca
+            product.valor = valor
             product.description = description
             product.location = location
             product.notes = notes
